@@ -66,8 +66,7 @@ if $BUILD_SERVER; then
     sudo systemctl stop clubrust
 
     echo "🚀 Deploying server binary..."
-    sudo cp "target/$BUILD_TARGET/server" "$BIN_DIR_SERVER/server.new"
-    sudo mv "$BIN_DIR_SERVER/server.new" "$BIN_DIR_SERVER/server"
+    cp "target/x86_64-unknown-linux-gnu/$BUILD_TARGET/server" "$BIN_DIR_SERVER/server"
 
     echo "♻️ Restarting clubrust.service..."
     sudo systemctl restart clubrust
@@ -82,7 +81,7 @@ if $BUILD_ADMIN; then
     cargo build --release -p admin
 
     echo "🚀 Deploying admin binary..."
-    cp "target/$BUILD_TARGET/admin" "$BIN_DIR_ADMIN/admin"
+    cp "target/x86_64-unknown-linux-gnu/$BUILD_TARGET/admin" "$BIN_DIR_ADMIN/admin"
 fi
 
 # Build + deploy client
