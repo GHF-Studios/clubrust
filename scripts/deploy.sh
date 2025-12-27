@@ -66,7 +66,8 @@ if $BUILD_SERVER; then
     sudo systemctl stop clubrust
 
     echo "🚀 Deploying server binary..."
-    cp "target/$BUILD_TARGET/server" "$BIN_DIR_SERVER/server"
+    sudo cp "target/$BUILD_TARGET/server" "$BIN_DIR_SERVER/server.new"
+    sudo mv "$BIN_DIR_SERVER/server.new" "$BIN_DIR_SERVER/server"
 
     echo "♻️ Restarting clubrust.service..."
     sudo systemctl restart clubrust
