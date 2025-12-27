@@ -33,11 +33,24 @@ echo "📥 Pulling latest source from GitHub..."
 git pull origin main
 echo "✅ Done."
 
+# Clear deployed www dir
+echo "🧹 Clearing deployed client assets..."
+rm -rf "$BIN_DIR_SERVER/www"
+mkdir -p "$BIN_DIR_SERVER/www"
+
+# Copy raw client assets from source (HTML, CSS, JS)
+cp -r "$SRC_DIR/server/www/"* "$BIN_DIR_SERVER/www/"
+
 # Build + deploy server
 if $BUILD_SERVER; then
     echo "🔨 Building server..."
     cargo build --release -p server
+
+    echo "🚀 Deploying server binary..."
     cp "target/$BUILD_TARGET/server" "$BIN_DIR_SERVER/server"
+
+    echo "♻️ Restarting clubrust.service..."
+    sudo systemctl restart clubrust
 fi
 
 # Build + deploy admin
