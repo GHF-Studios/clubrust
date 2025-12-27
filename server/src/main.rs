@@ -6,7 +6,7 @@ use std::fs;
 #[tokio::main]
 async fn main() {
     // Clean up any stale socket
-    let socket_path = "/run/clubrust.sock";
+    let socket_path = "/run/clubrust/clubrust.sock";
     if Path::new(socket_path).exists() {
         fs::remove_file(socket_path).unwrap();
     }
