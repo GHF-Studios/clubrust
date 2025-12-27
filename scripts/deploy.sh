@@ -39,7 +39,11 @@ rm -rf "$BIN_DIR_SERVER/www"
 mkdir -p "$BIN_DIR_SERVER/www"
 
 # Copy raw client assets from source (HTML, CSS, JS)
-cp -r "$SRC_DIR/server/www/"* "$BIN_DIR_SERVER/www/"
+if [ -d "$SRC_DIR/server/www" ]; then
+    cp -r "$SRC_DIR/server/www/"* "$BIN_DIR_SERVER/www/" || true
+else
+    echo "⚠️  Warning: No static assets found in server/www/"
+fi
 
 # Build + deploy server
 if $BUILD_SERVER; then
@@ -57,6 +61,8 @@ fi
 if $BUILD_ADMIN; then
     echo "🔨 Building admin..."
     cargo build --release -p admin
+
+    echo "🚀 Deploying admin binary..."
     cp "target/$BUILD_TARGET/admin" "$BIN_DIR_ADMIN/admin"
 fi
 
@@ -75,7 +81,7 @@ if $BUILD_CLIENT; then
     # Postprocess with wasm-bindgen (must be installed via `cargo install wasm-bindgen-cli`)
     ~/.cargo/bin/wasm-bindgen "$wasm_input" --target web --out-dir "$out_dir"
 
-    echo "🚀 Client deployed to $out_dir"
+    echo "🚀 Deploying client to $out_dir"
     cd "$SRC_DIR"
 fi
 
