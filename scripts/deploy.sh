@@ -49,7 +49,7 @@ mkdir -p "$BIN_DIR_SERVER/www"
 
 # Copy raw client assets (HTML, CSS, JS)
 if [ -d "$SRC_DIR/server/www" ]; then
-    cp -r "$SRC_DIR/server/www/"* "$BIN_DIR_SERVER/www/" || true
+    sudo cp -r "$SRC_DIR/server/www/"* "$BIN_DIR_SERVER/www/" || true
 else
     echo "⚠️  Warning: No static assets found in server/www/"
 fi
@@ -66,7 +66,7 @@ if $BUILD_SERVER; then
     sudo systemctl stop clubrust
 
     echo "🚀 Deploying server binary..."
-    cp "target/x86_64-unknown-linux-gnu/$BUILD_TARGET/server" "$BIN_DIR_SERVER/server"
+    sudo cp "target/x86_64-unknown-linux-gnu/$BUILD_TARGET/server" "$BIN_DIR_SERVER/server"
 
     echo "♻️ Restarting clubrust.service..."
     sudo systemctl restart clubrust
@@ -81,7 +81,7 @@ if $BUILD_ADMIN; then
     cargo build --release -p admin
 
     echo "🚀 Deploying admin binary..."
-    cp "target/x86_64-unknown-linux-gnu/$BUILD_TARGET/admin" "$BIN_DIR_ADMIN/admin"
+    sudo cp "target/x86_64-unknown-linux-gnu/$BUILD_TARGET/admin" "$BIN_DIR_ADMIN/admin"
 fi
 
 # Build + deploy client
