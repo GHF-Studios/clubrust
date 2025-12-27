@@ -62,6 +62,9 @@ if $BUILD_SERVER; then
     echo "🔨 Building server..."
     cargo build --release -p server
 
+    echo "🛑 Stopping clubrust.service..."
+    sudo systemctl stop clubrust
+
     echo "🚀 Deploying server binary..."
     cp "target/$BUILD_TARGET/server" "$BIN_DIR_SERVER/server"
 
