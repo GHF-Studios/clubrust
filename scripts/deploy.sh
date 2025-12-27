@@ -29,6 +29,9 @@ if ! $BUILD_SERVER && ! $BUILD_ADMIN && ! $BUILD_CLIENT; then
 fi
 
 cd "$SRC_DIR"
+echo "📥 Pulling latest source from GitHub..."
+git pull origin main
+echo "✅ Done."
 
 # Build + deploy server
 if $BUILD_SERVER; then
