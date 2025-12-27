@@ -29,16 +29,25 @@ if ! $BUILD_SERVER && ! $BUILD_ADMIN && ! $BUILD_CLIENT; then
 fi
 
 cd "$SRC_DIR"
+
+# Pull latest source
 echo "📥 Pulling latest source from GitHub..."
 git pull origin main
 echo "✅ Done."
+
+# Fix line endings + permissions
+echo "📐 Normalizing line endings..."
+find . -type f -exec dos2unix {} \; > /dev/null 2>&1 || echo "⚠️ dos2unix not installed"
+
+echo "🔧 Setting execute permissions on scripts..."
+chmod +x "$SRC_DIR/scripts/"*.sh || true
 
 # Clear deployed www dir
 echo "🧹 Clearing deployed client assets..."
 rm -rf "$BIN_DIR_SERVER/www"
 mkdir -p "$BIN_DIR_SERVER/www"
 
-# Copy raw client assets from source (HTML, CSS, JS)
+# Copy raw client assets (HTML, CSS, JS)
 if [ -d "$SRC_DIR/server/www" ]; then
     cp -r "$SRC_DIR/server/www/"* "$BIN_DIR_SERVER/www/" || true
 else
@@ -47,6 +56,9 @@ fi
 
 # Build + deploy server
 if $BUILD_SERVER; then
+    echo "🧹 Cleaning server build..."
+    cargo clean -p server
+
     echo "🔨 Building server..."
     cargo build --release -p server
 
@@ -59,6 +71,9 @@ fi
 
 # Build + deploy admin
 if $BUILD_ADMIN; then
+    echo "🧹 Cleaning admin build..."
+    cargo clean -p admin
+
     echo "🔨 Building admin..."
     cargo build --release -p admin
 
@@ -68,22 +83,23 @@ fi
 
 # Build + deploy client
 if $BUILD_CLIENT; then
+    echo "🧹 Cleaning client build..."
+    cargo clean -p client
+
     echo "🔨 Building client (WASM)..."
     cd "$SRC_DIR/client"
 
-    # Build the client for WASM
     cargo build --release --target wasm32-unknown-unknown
 
     wasm_input="$SRC_DIR/target/wasm32-unknown-unknown/release/client.wasm"
     out_dir="$BIN_DIR_SERVER/www/"
     mkdir -p "$out_dir"
 
-    # Postprocess with wasm-bindgen (must be installed via `cargo install wasm-bindgen-cli`)
+    echo "🧪 wasm-bindgen..."
     ~/.cargo/bin/wasm-bindgen "$wasm_input" --target web --out-dir "$out_dir"
 
-    echo "🚀 Deploying client to $out_dir"
+    echo "🚀 Client deployed to $out_dir"
     cd "$SRC_DIR"
 fi
-
 
 echo "✅ Deploy finished."
