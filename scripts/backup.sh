@@ -11,13 +11,13 @@ LATEST_LINK="/home/clubrust/backups/latest"
 mkdir -p "$BACKUP_DIR"
 
 echo "📦 Backing up worlds..."
-cp -r "$SRC_WORLDS" "$BACKUP_DIR/"
+[ -d "$SRC_WORLDS" ] && cp -r "$SRC_WORLDS" "$BACKUP_DIR/" || echo "⚠️ No worlds/ dir"
 
 echo "🧠 Backing up database..."
-cp -r "$SRC_DB" "$BACKUP_DIR/"
+[ -d "$SRC_DB" ] && cp -r "$SRC_DB" "$BACKUP_DIR/" || echo "⚠️ No data/ dir"
 
 echo "🛠️  Backing up configs..."
-cp -r "$SRC_CONFIGS" "$BACKUP_DIR/"
+[ -d "$SRC_CONFIGS" ] && cp -r "$SRC_CONFIGS" "$BACKUP_DIR/" || echo "⚠️ No config/ dir"
 
 # Update symlink
 rm -f "$LATEST_LINK"
