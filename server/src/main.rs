@@ -4,8 +4,29 @@ use std::path::Path;
 use std::fs;
 use std::os::unix::fs::PermissionsExt;
 
+use rusqlite::{Connection, Result};
+use std::path::Path;
+
+fn init_db() -> Result<()> {
+    let db_path = "/home/clubrust/data/clubrust.db";
+
+    let first_time = !Path::new(db_path).exists();
+    let conn = Connection::open(db_path)?;
+
+    if first_time {
+        println!("📁 Running DB init script...");
+        let init_sql = std::fs::read_to_string("/home/clubrust/data/init.sql")?;
+        conn.execute_batch(&init_sql)?;
+    }
+
+    println!("🗄️  Database ready at {}", db_path);
+    Ok(())
+}
+
 #[tokio::main]
 async fn main() {
+    init_db().expect("DB init failed");
+
     // Clean up any stale socket
     let socket_path = "/run/clubrust/clubrust.sock";
     if Path::new(socket_path).exists() {
