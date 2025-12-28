@@ -3,9 +3,7 @@ use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
 use std::path::Path;
 use std::fs;
 use std::os::unix::fs::PermissionsExt;
-
 use rusqlite::{Connection, Result};
-use std::path::Path;
 
 fn init_db() -> Result<()> {
     let db_path = "/home/clubrust/data/clubrust.db";
