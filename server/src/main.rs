@@ -13,7 +13,7 @@ fn init_db() -> Result<()> {
 
     if first_time {
         println!("📁 Running DB init script...");
-        let init_sql = std::fs::read_to_string("/home/clubrust/data/init.sql")?
+        let init_sql = std::fs::read_to_string("/home/clubrust/data/init.sql")
             .map_err(|e| rusqlite::Error::FromSqlConversionFailure(0, rusqlite::types::Type::Text, Box::new(e)))?;
         conn.execute_batch(&init_sql)?;
     }
