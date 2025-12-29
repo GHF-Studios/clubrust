@@ -56,13 +56,14 @@ fi
 
 # Build + deploy server
 if $BUILD_SERVER; then
-    echo "🧹 Cleaning server build..."
-    cargo clean -p server
+    # echo "🧹 Cleaning server build..."
+    # cargo clean -p server
 
     echo "🔨 Building server..."
     cargo build --release -p server
 
     echo "🛑 Stopping clubrust.service..."
+    sudo systemctl daemon-reload
     sudo systemctl stop clubrust
 
     echo "🚀 Deploying server binary..."
@@ -74,8 +75,8 @@ fi
 
 # Build + deploy admin
 if $BUILD_ADMIN; then
-    echo "🧹 Cleaning admin build..."
-    cargo clean -p admin
+    # echo "🧹 Cleaning admin build..."
+    # cargo clean -p admin
 
     echo "🔨 Building admin..."
     cargo build --release -p admin
@@ -86,8 +87,8 @@ fi
 
 # Build + deploy client
 if $BUILD_CLIENT; then
-    echo "🧹 Cleaning client build..."
-    cargo clean -p client
+    # echo "🧹 Cleaning client build..."
+    # cargo clean -p client
 
     echo "🔨 Building client (WASM)..."
     cd "$SRC_DIR/client"
